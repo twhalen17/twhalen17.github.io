@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+    <head>
+        
+           <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+        <!--
+            Load Carto's code so we can pull in our Carto maps.
+        -->
+        <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodbui/assets/4.6.25/stylesheets/deep_insights.css" />
+        <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+        <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodbui/assets/4.6.25/stylesheets/public_editor3.css" />
+        <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>
+
+<style>
+    
+    #header{
+        font-size: 100px;
+        color:forestgreen;
+        text-align: center;
+        font-family: fantasy;
+        margin-bottom: 100px;
+        margin-top: 100px;
+        }
+    
+       #websites{
+        font-size: 50px;
+        font-family: fantasy;
+        color: darkseagreen;
+        text-align: left;
+        margin-bottom: 15px;
+        margin-top: 15px;   
+        }
+    
+    
+    #map{
+        font-size: 40px;
+        font-family: fantasy;
+        color: darkseagreen;
+        text-align: left;
+        margin-top: 100px;
+    
+    }
+    
+     #map-2 {
+       height: 600px;
+       width: 100%;
+         margin-top: 20px;
+         margin-bottom: 200px;
+            }
+    
+    #love{
+       font-size: 40px;
+        font-family: fantasy;
+        color: darkseagreen;
+        text-align: left;
+        margin-top: inherit; 
+    }
+    
+    .list1 {
+       font-size: 25px;
+        font-family: fantasy;
+        color: darkseagreen;
+        text-decoration-color: aquamarine;
+        text-align: left;
+        margin-bottom: 20px;
+        
+        }
+    
+    .puppies{
+        padding:3px;
+        border:5px solid #021a40;
+        background-color:#00A35F;
+    }
+    
+  
+      body {background-color: azure;
+            
+        }
+
+  .buttons {
+        position: ;
+        top: 15px;
+        left: 15px;
+        font-size: 40px;
+    }
+        
+</style>
+        
+    </head>
+    <body>
+
+
+<!--
+<p>
+<strong><em><font size="20">Tara Whalen's Week 6 Homework</font></em></strong>
+</P>  
+-->
+    
+<h1 id="header">Tara Whalen's Week 7 Homework</h1>  
+        
+        
+<p id="websites">Frequently Visited Sites:</p>
+        
+        
+<ol>
+    <li class="list1"><a href= "https://login.newschool.edu:8447/cas-web/login?service=https%3A%2F%2Fmy.newschool.edu%2Fc%2Fportal%2Flogin">My New School</a></li>
+    <li class="list1"><a href= "https://www.yelp.com/queens">Yelp</a></li> 
+    <li class="list1"><a href= "https://news.google.com">News</a></li>
+</ol>
+  
+
+<h2 id="map"> Green Infrastructure in NYC Flood Zones</h2>
+        
+    <div id="map-2"></div>
+    <div class="buttons">
+    <button class="Bioswale">Bioswale</button>
+    <button class="reset">reset</button>
+    </div>
+        
+<script>
+	var green_infrastructure;
+            $(document).ready(function () {
+                //
+                // Initialize map from Carto: create the map and store the data layer for later
+                //
+                // The format for this url is:
+                //  https://thenewschool.carto.com/u/{username}/api/v2/viz/{mapid}/viz.json
+                //
+                // and you can find the mapid by looking at the url of your map when editing it. For example,
+                // when I'm editing this map the url is:
+                //  https://thenewschool.carto.com/u/brelsfoeagain/builder/79edb122-0374-11e7-b189-0e233c30368f
+                //
+                // The mapid is everything after "/builder/" at the end.
+                //
+                cartodb.createVis('map-2', 'https://thenewschool.carto.com/u/whalt973/api/v2/viz/29887ad2-09d7-11e7-8b11-0e3ebc282e83/viz.json')
+                    .done(function (vis, layers) {
+                    green_infrastructureLayer= layers[1].getSubLayer(0);
+                    });
+
+                $('.Bioswale').click(function () {
+                  green_infrastructureLayer.setSQL("SELECT * FROM green_infrastructure WHERE gi_technol = 'Bioswale'");
+                });
+                $('.reset').click(function () {
+                  green_infrastructureLayer.setSQL("SELECT * FROM green_infrastructure");
+               });
+            });
+         
+        </script>
+
+
+<h3 id="love">I LOVE PUPPIES!</h3>
+        
+<img class="puppies" src="https://i.ytimg.com/vi/opKg3fyqWt4/hqdefault.jpg" >
+    
+<img class="puppies" src="http://cdn3-www.dogtime.com/assets/uploads/2016/09/French-Bulldog-Puppy-5-300x199.jpg">
+        
+        
+    </body>
+</html>
+
+
+
