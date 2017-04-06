@@ -1,75 +1,180 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-    <title>Advanced GIS</title>
-    <style type="text/CSS">
+<head>
+    <meta charset="utf-8"/>
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">  
     
-   .h1{font-size: 20;
-    text-transform: uppercase;
-    text-align: center;}
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
     
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+    
+    <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>
+    
+    <style>
+        
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+/*            font-family: sans-serif;*/
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .sidepanel {
+            background-color: #58595B;
+            color: white;
+            position: absolute;
+            top: 0;
+/*            right: 0;*/
+            bottom: 0;
+            width: 25%;
+            height: 100%;
+            overflow: auto;
+            border-right: solid black 1px;
+        }
+        .wrapper {
+            display: block;
+            padding: 4px 30px 0 30px; 
+        }
+
+        div.cartodb-zoom {
+            margin: 20px 0 0 26%;
+        }
+        
     </style>
     
-    </head>
-   
-    
- <body>
-    </body>
-    
-     <p>
-<strong><em><font size="20">Tara Whalen's Week 5 Homework</font></em></strong>
+          <script>
+        var dataLayer;
+    $(document).ready(function () {
+        cartodb.createVis('map', 'https://thenewschool.carto.com/u/whalt973/api/v2/viz/e4697502-1a14-11e7-92eb-0e05a8b3e3d7/viz.json',
+                         {
+            center_lat: 40.7459192,
+            center_lon: -73.991922,
+            zoom: 13,
         
- </P>  
-
-
-
-
+        })
+        .done(function (vis, layers) {
+            dataLayer = layers[1].getSubLayer(0);
+        });
+        
+        function updateSql() {
+              var sqltype = "SELECT * FROM nyceec_map";
+              var whereConditions = [];
+              if ($('#co-gen').is(':checked')) {
+                  whereConditions.push("type LIKE '%cogeneration%'");
+              }
+              if ($('#en-eff').is(':checked')) {
+                  whereConditions.push("type LIKE '%energy efficiency%'");
+              }
+            
+            if ($('#en-eff and co-gen').is(':checked')) {
+                  whereConditions.push("type LIKE '%energy efficiency & cogeneration%'");
+            }
+            
+            if ($('#demand response').is(':checked')) {
+                  whereConditions.push("type LIKE '%demand response%'");
+            }
+             
+            if ($('#fuel conversion').is(':checked')) {
+                  whereConditions.push("type LIKE '%fuel conversion%'");
+            }
+            
+            if ($('#en-eff and fc').is(':checked')) {
+                  whereConditions.push("type LIKE '%energy efficiency & fuel conversion%'");
+            }
+            
+              if (whereConditions.length > 0) {
+                  sqltype+= ' WHERE ' + whereConditions.join(' OR ');
+              }
+            
+              console.log(sqltype);
+              dataLayer.setSQL(sqltype);
+           }
+        
+            $('#co-gen').change(function (){
+              updateSql();
+          });
+        
+            $('#en-eff').change(function (){
+              updateSql();
+          });
+        
+          $('#en-eff and co-gen').change(function (){
+              updateSql();
+              
+          });
+        
+          $('#demand response').change(function (){
+              updateSql();
+              
+          });
+        
+          $('#fuel conversion').change(function (){
+              updateSql();
+              
+          });
+        
+          $('#en-eff and fc').change(function (){
+              updateSql();
+          })
+    });
+   </script>
+    </head>
     
-   <p>
-       
-       <div>
-       
-       
-       Frequently Visited Sites: 
-       <ul>
-<li><a href= "https://login.newschool.edu:8447/cas-web/login?service=https%3A%2F%2Fmy.newschool.edu%2Fc%2Fportal%2Flogin">My New School</a></li>
-<li><a href= "https://www.yelp.com/queens">Yelp</a></li> 
-<li><a href= "https://news.google.com">News</a></li>
-
-</ul>
-
-</div>
-
-
-
-
-</p>
-
-
-
-
-
-
-<p>
-<font size="14"> Completed and Potential Green Infrastructure in NYC Flood Zones</font>
-</p>
+    <body>
+        
+    <div id="map"></div>
+        
+    <!--  sidebox-->
+        <div id="side-box" class="sidepanel" style="display:block;">
+        <div class="wrapper">
+        <div id="title-text">
+            <h1 style="color: #7DBE31;">NYCEEC Projects</h1>
+            </div>
+            
+            <div id="project-type">
+            <p>Click different project types</p>
+            <div>
+              
+                <input type="checkbox" id="cogen">
+                     <label class="checkbox-label" for="co-gen">Cogeneration</label>
+                <br>
+                <input type="checkbox" id="en-eff">
+                     <label class="checkbox-label" for="en-eff">Energy Efficiency</label>
+                <br>                
+                <input type="checkbox" id="en-eff and co-gen">
+                     <label class="checkbox-label" for="energy efficiency and Cogeneration">Energy Efficiency and Cogeneration</label>
+                <br>    
+                 <input type="checkbox" id="demand response">
+                     <label class="checkbox-label" for="demand response">Demand Response</label>
+                 <br>  
+                 <input type="checkbox" id="fuel conversion">
+                     <label class="checkbox-label" for="fuel conversion">Fuel Conversion</label>
+                <br>  
+                
+                 <input type="checkbox" id="en-eff and fc">
+                     <label class="checkbox-label" for="energy efficiency & fuel conversion">Energy Efficiency and Fuel Conversion</label>
+               
+            </div>
+            
+            </div>
+            
+            
+            </div>
+        </div>
+        
+        
+      
     
-    <iframe width="100%" height="520" frameborder="0" src="https://thenewschool.carto.com/u/whalt973/builder/aea5ea8c-f943-11e6-b2e9-0e3ff518bd15/embed" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-
-
-
-
-<font size= "12"><p>I LOVE PUPPIES!</p></font>
-
-<p> <img src="https://i.ytimg.com/vi/opKg3fyqWt4/hqdefault.jpg"  </p>
-  
-
-    
-    <p>
-<img src="http://cdn3-www.dogtime.com/assets/uploads/2016/09/French-Bulldog-Puppy-5-300x199.jpg"   </p>
-         
-   
-
-       
+    </body>
 </html>
